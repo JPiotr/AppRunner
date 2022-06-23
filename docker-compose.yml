@@ -1,0 +1,53 @@
+version: '3.9'
+services:
+  apprunner-server:
+    container_name: appRunner
+    restart: always
+    image: jpiotr/apprunner
+    build:
+      context: src/main
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
+    expose:
+      - 5004
+    ports:
+      - "5004:8080"
+    volumes:
+      - type: bind
+        source: appRunner
+        target: /hostpipe
+        consistency: consistent
+        bind:
+          propagation: shared
+      - type: volume
+        source: appRunner
+        target: /hostpipe
+        bind:
+          propagation: shared
+        volume:
+          nocopy: false
+    depends_on:
+      - apprunnermongodb:/src
+  apprunnermongodb:
+    image: mongo
+    container_name: apprunnermongodb
+    environment:
+      - MONGO_INITDB_DATABASE=AppRunnerDB
+    expose:
+      - 5500
+    ports:
+      - "5500:27017"
+    volumes:
+      - mongoDB:/data/db
+volumes:
+  mongoDB:
+  appRunner:
+#    driver: local
+#    driver_opts:
+#      o: bind
+#      type: none
+#      device: /c/!Docker
+
+
+
