@@ -18,7 +18,7 @@ import java.util.Map;
 @Slf4j
 public class AppController {
     public final AppService appService;
-
+    //rebuild endpoints to voids
     @GetMapping("/all")
     public ResponseEntity<Response> index(){
         return ResponseEntity.ok(
